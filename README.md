@@ -29,19 +29,17 @@ really a list containing a function to
 
 <!-- -->
 
-    makeVector <- function(x = numeric()) {
-            m <- NULL
-            set <- function(y) {
-                    x <<- y
-                    m <<- NULL
-            }
-            get <- function() x
-            setmean <- function(mean) m <<- mean
-            getmean <- function() m
-            list(set = set, get = get,
-                 setmean = setmean,
-                 getmean = getmean)
-    }
+    makecacheMatrix <- function(x=matrix()){
+        inv <- NULL
+        set<- function(y){
+                X<<-y
+                inv<<-NULL
+        }
+        get <- function() {x}
+        setInverse <- function(inverse) {inv <<- inverse}
+        getInverse <- function() {inv}
+        list(set= set, get= get, setInverse= setInverse, getInverse= getInverse)
+}
 
 The following function calculates the mean of the special "vector"
 created with the above function. However, it first checks to see if the
@@ -50,17 +48,18 @@ cache and skips the computation. Otherwise, it calculates the mean of
 the data and sets the value of the mean in the cache via the `setmean`
 function.
 
-    cachemean <- function(x, ...) {
-            m <- x$getmean()
-            if(!is.null(m)) {
-                    message("getting cached data")
-                    return(m)
-            }
-            data <- x$get()
-            m <- mean(data, ...)
-            x$setmean(m)
-            m
-    }
+   Cache<- function(x,...) {
+        inv<- x$getInverse()
+        if(!is.null(inv)) {
+                message("getting cached data")
+                return(inv)
+        }
+        mat<- x$get()
+        inv<- solve(mat,...)
+        x$setInverse(inv)
+        inv
+}
+
 
 ### Assignment: Caching the Inverse of a Matrix
 
